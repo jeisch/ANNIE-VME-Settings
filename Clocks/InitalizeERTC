@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Some parts of this script should run with sudo, others not
+if [[ $(id -u) -ne 0 ]] ; then echo "Please run as root" ; exit 1 ; fi
+
+if [ -n "$SUDO_USER" ]; then 
+	true_user=$SUDO_USER
+	nonroot_cmd="sudo -u $true_user "
+else
+	true_user=$(whoami)
+	nonroot_cmd=""
+fi
+
+cd "$(dirname "$0")"
+
+if [ ! -c /dev/rtc1 ]; then
+	./ActivateERTC
+fi
+
+hwclock --systohc -D --noadjfile --utc -f /dev/rtc1
+

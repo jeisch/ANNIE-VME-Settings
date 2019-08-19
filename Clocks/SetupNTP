@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Some parts of this script should run with sudo, others not
+if [[ $(id -u) -ne 0 ]] ; then echo "Please run as root" ; exit 1 ; fi
+
+if [ -n "$SUDO_USER" ]; then 
+	true_user=$SUDO_USER
+	nonroot_cmd="sudo -u $true_user "
+else
+	true_user=$(whoami)
+	nonroot_cmd=""
+fi
+
+cd "$(dirname "$0")"
+
+echo "install i2c-tools to configure ERTC"
+yum -y install i2c-tools
+
+echo "Checking if there is already a backup of /etc/chrony.conf"
+if [ ! -f /etc/chrony.conf.backup ]; then
+	echo "no backup found"
+	cp /etc/chrony.conf /etc/chrony.conf.backup
+fi
+
+echo "Copy latest chrony.conf to etc"
+cp chrony.conf /etc/chrony.conf
+
+echo "Stopping chronyd"
+systemctl stop chronyd
+
+echo "Starting chronyd"
+systemctl start chronyd
+
+sleep 1
+
+echo "Initial sync"
+sudo chronyc burst 5/10 gateway
+echo "sleep for 10 second"
+sleep 10
+
+sudo chronyc makestep
+
+chronyc sources
+
+echo "Install complete!"
+
+
