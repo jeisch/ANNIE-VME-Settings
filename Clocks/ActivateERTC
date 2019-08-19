@@ -27,6 +27,8 @@ echo "Using i2c bus: $bus"
 
 echo rx8581 0x32 > /sys/bus/i2c/devices/$bus/new_device
 
+sleep 1
+
 if [ -c /dev/rtc1 ]; then
 	echo "Linking /dev/rtc to ERTC"
 	ln -sf /dev/rtc1 /dev/rtc
