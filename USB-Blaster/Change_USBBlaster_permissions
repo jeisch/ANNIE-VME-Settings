@@ -1,0 +1,7 @@
+#!/bin/sh
+
+echo "SUBSYSTEM==\"usb\", ATTR{idVendor}==\"09fb\", ATTR{idProduct}==\"6001\", MODE=\"0666\"\n" > /etc/udev/rules.d/51-usbblaster.rules
+
+udevadm control --reload
+udevadm trigger
+
