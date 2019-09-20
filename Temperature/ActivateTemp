@@ -28,7 +28,7 @@ modprobe jc42
 bus=`i2cdetect -l | grep -i i801 | cut -f1`
 echo "Using i2c bus: $bus"
 
-echo jc42 0x1f > /sys/bus/i2c/devices/$bus/new_device
+echo jc42 0x1f > sudo tee /sys/bus/i2c/devices/$bus/new_device
 
 sleep 1
 

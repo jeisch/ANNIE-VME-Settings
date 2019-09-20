@@ -25,7 +25,7 @@ modprobe i2c-i801
 bus=`i2cdetect -l | grep -i i801 | cut -f1`
 echo "Using i2c bus: $bus"
 
-echo rx8581 0x32 > /sys/bus/i2c/devices/$bus/new_device
+echo rx8581 0x32 > sudo tee /sys/bus/i2c/devices/$bus/new_device
 
 sleep 1
 
