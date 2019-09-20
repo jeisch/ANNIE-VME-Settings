@@ -13,37 +13,10 @@ fi
 
 cd "$(dirname "$0")"
 
-echo "install i2c-tools to configure ERTC"
-yum -y install i2c-tools
+# jc42 driver will load automatically
 
-echo "load I2C-dev"
-modprobe i2c-dev
-
-echo "load intel i2c driver (probably already loaded)"
-modprobe i2c-i801
-
-echo "Load the JEDEC JC 42.4 Temperature sensor driver"
-modprobe jc42
-
-bus=`i2cdetect -l | grep -i i801 | cut -f1`
-echo "Using i2c bus: $bus"
-
-echo -n "jc42 0x1f" > /sys/bus/i2c/devices/$bus/new_device
+echo "Ignore if there is a write error on the next line"
+echo -n "jc42 0x1f" > /sys/bus/i2c/devices/i2c-0/new_device
 
 sleep 1
-
-exit 
-if [ -c /dev/rtc1 ]; then
-	echo "Linking /dev/rtc to ERTC"
-	ln -sf /dev/rtc1 /dev/rtc
-
-	echo "Done!"
-	ls -l /dev/rtc*
-else
-	echo "could not find /dev/rtc1"
-	echo "maybe something went wrong?"
-	dmesg | tail
-	ls -l /dev/rtc*
-fi
-
 
