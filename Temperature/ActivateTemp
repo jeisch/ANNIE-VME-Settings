@@ -14,9 +14,7 @@ fi
 cd "$(dirname "$0")"
 
 # jc42 driver will load automatically
-
-echo "Ignore if there is a write error on the next line"
 echo -n "jc42 0x1f" > /sys/bus/i2c/devices/i2c-0/new_device
 
-sleep 1
+# or we could have just modprobe jc42, which would automatically find it too.
 
